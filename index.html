@@ -102,10 +102,13 @@ function executeCode(code) {
 
     // Display the output
     output.textContent = logs.join("\n");
-
+    console.log("output: ", result)
     // If there's a return value, append it
     if (result !== undefined) {
-      output.textContent += "\n\nReturn value: " + result;
+      output.textContent += "\n\n" + result;
+    }
+    if (result == undefined) {
+      output.textContent += "" + result;
     }
 
     output.classList.remove("error");
