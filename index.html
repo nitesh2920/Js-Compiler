@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Code Executor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-family: monospace;
+            min-height: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            min-height: 100px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Code Executor</h1>
+    
+    <textarea id="codeInput" placeholder="Write your JavaScript code here">// Example code:
+console.log('Current Date and Time (UTC):', new Date().toISOString());
+console.log('Hello, nitesh2920!');
+
+// Try some calculations
+let sum = 0;
+for(let i = 1; i <= 5; i++) {
+    sum += i;
+}
+console.log('Sum of numbers 1 to 5:', sum);
+
+// Try working with arrays
+const numbers = [1, 2, 3, 4, 5];
+console.log('Doubled numbers:', numbers.map(n => n * 2));</textarea>
+    <br>
+    <button id="runCodeButton">Run Code</button>
+
+    <h2>Output:</h2>
+    <pre id="output">Click "Run Code" to see the output</pre>
+
+    <script>
+        function executeCode(code) {
+            const output = document.getElementById('output');
+            
+            // Create a new console.log function to capture output
+            const originalConsoleLog = console.log;
+            const logs = [];
+            
+            console.log = (...args) => {
+                logs.push(args.map(arg => 
+                    typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+                ).join(' '));
+                originalConsoleLog.apply(console, args);
+            };
+
+            try {
+                // Create a new Function from the code and execute it
+                const result = new Function(code)();
+                
+                // Display the output
+                output.textContent = logs.join('\n');
+                
+                // If there's a return value, append it
+                if (result !== undefined) {
+                    output.textContent += '\n\nReturn value: ' + result;
+                }
+                
+                output.classList.remove('error');
+            } catch (error) {
+                output.textContent = 'Error: ' + error.message;
+                output.classList.add('error');
+            } finally {
+                // Restore the original console.log
+                console.log = originalConsoleLog;
+            }
+        }
+
+        document.getElementById('runCodeButton').addEventListener('click', () => {
+            const code = document.getElementById('codeInput').value;
+            if (code.trim()) {
+                executeCode(code);
+            } else {
+                document.getElementById('output').textContent = 'Please enter some code to run';
+            }
+        });
+
+        // Add some keyboard shortcuts
+        document.getElementById('codeInput').addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Enter to run code
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('runCodeButton').click();
+            }
+        });
+    </script>
+</body>
+</html>
