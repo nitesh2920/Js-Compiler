@@ -79,9 +79,8 @@ const numbers = [1, 2, 3, 4, 5];
 });
 
 function executeCode(code) {
-  const output = document.getElementById("output"); // Correctly reference the output element
+  const output = document.getElementById("output"); 
 
-  // Create a new console.log function to capture output
   const originalConsoleLog = console.log;
   const logs = [];
 
@@ -97,10 +96,8 @@ function executeCode(code) {
   };
 
   try {
-    // Create a new Function from the code and execute it
+   
     const result = new Function(code)();
-
-    // Display the output
     output.textContent = logs.join("\n");
     console.log("output: ", result)
     
@@ -116,7 +113,7 @@ function executeCode(code) {
     output.textContent = "Error: " + error.message;
     output.classList.add("error");
   } finally {
-    // Restore the original console.log
+ 
     console.log = originalConsoleLog;
   }
 }
@@ -131,9 +128,8 @@ document.getElementById("runCodeButton").addEventListener("click", () => {
   }
 });
 
-// Add some keyboard shortcuts
+// not working
 document.getElementById("codeInput").addEventListener("keydown", (e) => {
-  // Ctrl/Cmd + Enter to run code
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
     e.preventDefault();
     document.getElementById("runCodeButton").click();
